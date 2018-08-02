@@ -1,7 +1,7 @@
-NAME="Anarchy Linux"
-PRETTY_NAME="Anarchy Linux"
-ID=anarchy
-ID_LIKE=anarchylinux
+NAME="Arch Linux"
+PRETTY_NAME="Custom Arch Linux"
+ID=archlinux
+ID_LIKE=archlinux
 ANSI_COLOR="0;36"
-HOME_URL="https://anarchy-linux.org/"
+HOME_URL="https://archlinux.org/"
 

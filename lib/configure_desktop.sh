@@ -74,9 +74,9 @@ graphics() {
 		fi
 	done
 
-	if ! (</etc/pacman.conf grep "anarchy-local"); then
-		sed -i -e '$a\\n[anarchy-local]\nServer = file:///usr/share/anarchy/pkg\nSigLevel = Never' /etc/pacman.conf
-	fi
+	#if ! (</etc/pacman.conf grep "anarchy-local"); then
+	#	sed -i -e '$a\\n[anarchy-local]\nServer = file:///usr/share/anarchy/pkg\nSigLevel = Never' /etc/pacman.conf
+	#fi
 
 	source "$lang_file"
 
@@ -339,11 +339,12 @@ graphics() {
 	fi
 
 	if (dialog --defaultno --yes-button "$yes" --no-button "$no" --yesno "\n$touchpad_msg" 10 60) then
-		if (<<<"$DE" grep "gnome" &> /dev/null); then
-			DE+="xf86-input-libinput "
-		else
-			DE+="xf86-input-synaptics "
-		fi
+		# if (<<<"$DE" grep "gnome" &> /dev/null); then
+		# 	DE+="xf86-input-libinput "
+		# else
+		# 	DE+="xf86-input-synaptics "
+		# fi
+		DE+="xf86-input-libinput "
 	fi
 
 	if "$enable_bt" ; then
@@ -381,23 +382,27 @@ graphics() {
 
 config_env() {
 
-	cp -r "$aa_dir"/extra/fonts/ttf-zekton-rg "$ARCH"/usr/share/fonts
-	chmod -R 755 "$ARCH"/usr/share/fonts/ttf-zekton-rg
-	arch-chroot "$ARCH" fc-cache -f
-	cp "$aa_dir"/extra/anarchy-icon.png "$ARCH"/root/.face
-	cp "$aa_dir"/extra/anarchy-icon.png "$ARCH"/etc/skel/.face
-	cp "$aa_dir"/extra/anarchy-icon.png "$ARCH"/usr/share/pixmaps
+	#cp -r "$aa_dir"/extra/fonts/ttf-zekton-rg "$ARCH"/usr/share/fonts
+	#chmod -R 755 "$ARCH"/usr/share/fonts/ttf-zekton-rg
+	#arch-chroot "$ARCH" fc-cache -f
+	#cp "$aa_dir"/extra/anarchy-icon.png "$ARCH"/root/.face
+	#cp "$aa_dir"/extra/anarchy-icon.png "$ARCH"/etc/skel/.face
+    #cp "$aa_dir"/extra/anarchy-icon.png "$ARCH"/usr/share/pixmaps
+    if "$david_dotfiles" ; then
+        tar -xf "$aa_dir/extra/desktop/david/config.tar.gz" -C "$ARCH"/etc/skel
+    fi
+    
 	mkdir "$ARCH"/usr/share/backgrounds/anarchy
 	cp -r "$aa_dir"/extra/wallpapers/* "$ARCH"/usr/share/backgrounds/anarchy/
 
-	if [ -n "$config_env" ]; then
-		tar -xf "$aa_dir/extra/desktop/$config_env/config.tar.gz" -C "$ARCH"/root
-		tar -xf "$aa_dir/extra/desktop/$config_env/config.tar.gz" -C "$ARCH"/etc/skel
-	fi
+	# if [ -n "$config_env" ]; then
+	# 	tar -xf "$aa_dir/extra/desktop/$config_env/config.tar.gz" -C "$ARCH"/root
+	# 	tar -xf "$aa_dir/extra/desktop/$config_env/config.tar.gz" -C "$ARCH"/etc/skel
+	# fi
 
 	case "$config_env" in
-		"Anarchy-gnome"|"Anarchy-budgie")	cp -r "$aa_dir/extra/desktop/Anarchy-gnome/gnome-backgrounds.xml" "$ARCH"/usr/share/gnome-background-properties
-		;;
+		# "Anarchy-gnome"|"Anarchy-budgie")	cp -r "$aa_dir/extra/desktop/Anarchy-gnome/gnome-backgrounds.xml" "$ARCH"/usr/share/gnome-background-properties
+		# ;;
 		"Anarchy-openbox")	if [ "$virt" == "vbox" ]; then
 						echo "VBoxClient-all &" >> "$ARCH"/etc/skel/.config/openbox/autostart
 						echo "VBoxClient-all &" >> "$ARCH"/root/.config/openbox/autostart

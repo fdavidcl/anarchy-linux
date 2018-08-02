@@ -230,10 +230,10 @@ build_conf() {
 		sudo cp /tmp/$pkg/*.pkg.tar.xz "$sq"/usr/share/anarchy/pkg
 	done
 
-	cd "$sq"/usr/share/anarchy/pkg || exit
-	sudo repo-add anarchy-local.db.tar.gz *.pkg.tar.xz
-	echo -e "\n[anarchy-local]\nServer = file:///usr/share/anarchy/pkg\nSigLevel = Never" | sudo tee -a "$sq"/etc/pacman.conf >/dev/null
-	cd "$aa" || exit
+	# cd "$sq"/usr/share/anarchy/pkg || exit
+	# sudo repo-add anarchy-local.db.tar.gz *.pkg.tar.xz
+	# echo -e "\n[anarchy-local]\nServer = file:///usr/share/anarchy/pkg\nSigLevel = Never" | sudo tee -a "$sq"/etc/pacman.conf >/dev/null
+	# cd "$aa" || exit
 
 	if [ "$sys" == "i686" ]; then
 		sudo rm -r "$sq"/root/.gnupg
@@ -301,9 +301,9 @@ build_sys_gui() {
 	sudo cp -r "$aa"/extra/gui/*.desktop "$sq"/usr/share/applications
 	sudo cp -r "$aa"/extra/gui/{issue,sudoers} "$sq"/etc/
 	sudo cp -r "$aa"/extra/anarchy-icon.png "$sq"/usr/share/pixmaps
-	sudo cp -r "$aa"/extra/anarchy-icon.png "$sq"/root/.face
+        sudo cp -r "$aa"/extra/anarchy-icon.png "$sq"/root/.face
 	sudo cp -r "$aa"/extra/anarchy-icon.png "$sq"/home/user/.face
-	sudo cp -r "$aa"/extra/fonts/ttf-zekton-rg "$sq"/usr/share/fonts
+	#sudo cp -r "$aa"/extra/fonts/ttf-zekton-rg "$sq"/usr/share/fonts
 	sudo cp -r "$aa"/extra/gui/{.xinitrc,.automated_script.sh} "$sq"/root
 	sudo cp -r "$aa"/extra/gui/{.xinitrc,.automated_script.sh} "$sq"/home/user
 	sudo cp -r "$aa"/extra/shellrc/.zshrc "$sq"/home/user/.zshrc
@@ -355,7 +355,8 @@ configure_boot() {
 create_iso() {
 
 	cd "$aa" || exit
-	xorriso -as mkisofs \
+	echo "Sorry need sudo for this"
+	sudo xorriso -as mkisofs \
 	-iso-level 3 \
 	-full-iso9660-filenames \
 	-volid "$iso_label" \

@@ -20,11 +20,13 @@ install_options() {
 	op_title="$install_op_msg"
         while (true) ; do
                  install_opt=$(dialog --ok-button "$ok" --cancel-button "$cancel" --menu "$install_opt_msg" 16 72 5 \
-                         "Anarchy-Desktop"       "$install_opt1" \
-                         "Anarchy-Desktop-LTS"   "$install_opt2" \
-                         "Anarchy-Server"        "$install_opt3" \
-                         "Anarchy-Server-LTS"    "$install_opt4" \
-			 "Anarchy-Advanced"      "$install_opt0" 3>&1 1>&2 2>&3)
+                         "Desktop"       "$install_opt1" \
+                         "Desktop-LTS"   "$install_opt2" \
+                         "Server"        "$install_opt3" \
+                         "Server-LTS"    "$install_opt4" \
+                         "Data-Science"  "$install_opt5" \
+                         "David"         "David's packages" \
+			 "Advanced"      "$install_opt0" 3>&1 1>&2 2>&3)
                  if [ "$?" -gt "0" ]; then
                           if (dialog --defaultno --yes-button "$yes" --no-button "$no" --yesno "\n$exit_msg" 10 60) then
                                   main_menu
@@ -115,7 +117,6 @@ prepare_base() {
 				;;
 				zsh) 	shrc=$(dialog --ok-button "$ok" --cancel-button "$cancel" --menu "\n$shrc_msg" 13 65 4 \
 								"$default"		"$shrc_msg1" \
-								"oh-my-zsh"		"$shrc_msg2" \
 								"grml-zsh-config"	"$shrc_msg4" \
 								"$none"			"$shrc_msg3" 3>&1 1>&2 2>&3)
 								if [ "$?" -gt "0" ]; then
@@ -126,7 +127,7 @@ prepare_base() {
 
 								if [ "$shrc" == "oh-my-zsh" ]; then
 									if ! (grep "anarchy-local" </etc/pacman.conf &>/dev/null); then
-										sed -i -e '$a\\n[anarchy-local]\nServer = file:///usr/share/anarchy/pkg\nSigLevel = Never' /etc/pacman.conf
+										#sed -i -e '$a\\n[anarchy-local]\nServer = file:///usr/share/anarchy/pkg\nSigLevel = Never' /etc/pacman.conf
 									fi
 									shell+=" oh-my-zsh-git"
 								elif [ "$shrc" == "grml-zsh-config" ]; then
