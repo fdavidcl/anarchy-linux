@@ -10,7 +10,7 @@ esac                            # }
 [[ -s /etc/mkshrc ]] && . /etc/mkshrc
 
 # Prompt
-PS1="$(echo -e "\033[32m<${USER}@${HOST}>$ \033[00m")"
+#PS1="$(echo -e "\033[32m<${USER}@${HOST}>$ \033[00m")"
 
 # local alias/function definitions
 alias ls='ls --color -F'
