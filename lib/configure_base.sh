@@ -16,33 +16,46 @@
 ###############################################################
 
 install_options() {
+    desktop=false
+    lts=false
+    unixporn=false
+    data_science=false
+    david=false
 
-	op_title="$install_op_msg"
-        while (true) ; do
-                 install_opt=$(dialog --ok-button "$ok" --cancel-button "$cancel" --menu "$install_opt_msg" 16 72 5 \
-                         "Desktop"       "$install_opt1" \
-                         "Desktop-LTS"   "$install_opt2" \
-                         "Server"        "$install_opt3" \
-                         "Server-LTS"    "$install_opt4" \
-                         "Data-Science"  "$install_opt5" \
-                         "David"         "David's packages" \
-			 "Advanced"      "$install_opt0" 3>&1 1>&2 2>&3)
-                 if [ "$?" -gt "0" ]; then
-                          if (dialog --defaultno --yes-button "$yes" --no-button "$no" --yesno "\n$exit_msg" 10 60) then
-                                  main_menu
-                          fi
-                 else
-                          break
-                 fi
-         done
+    op_title="$install_op_msg"
+    while (true) ; do
+        install_opts=$(dialog --ok-button "$ok" --cancel-button "$cancel" --checklist "Select your desired install options with Spacebar, Enter to confirm" 16 72 5 \
+                              "desktop"      "Install desktop programs"            "on"  \
+                              "lts"          "Use linux-lts as kernel"             "off" \
+                              "unixporn"     "i3 and stuff"                        "off" \
+                              "data_science" "Languages/programs for data science" "off" \
+                              "david"        "David's special selection"           "off" \
+                              3>&1 1>&2 2>&3)
+        
+        if [ "$?" -gt "0" ]; then
+            if (dialog --defaultno --yes-button "$yes" --no-button "$no" --yesno "\n$exit_msg" 10 60) then
+               main_menu
+            fi
+        else
+            break
+        fi
+    done
 
-         case "$install_opt" in
-                 Anarchy-Advanced)       prepare_base
-                                         graphics
-                 ;;
-                 *)                      quick_install
-                 ;;
-         esac
+    for opt in $install_opts
+    do
+        declare -x "$opt"=true
+    done
+
+    quick_install
+        
+        
+         # case "$install_opt" in
+         #         Anarchy-Advanced)       prepare_base
+         #                                 graphics
+         #         ;;
+         #         *)                      quick_install
+         #         ;;
+         # esac
 
 }
 
@@ -125,14 +138,14 @@ prepare_base() {
 
 								sh="/usr/bin/$shell" shell="zsh zsh-syntax-highlighting"
 
-								if [ "$shrc" == "oh-my-zsh" ]; then
-									if ! (grep "anarchy-local" </etc/pacman.conf &>/dev/null); then
-										#sed -i -e '$a\\n[anarchy-local]\nServer = file:///usr/share/anarchy/pkg\nSigLevel = Never' /etc/pacman.conf
-									fi
-									shell+=" oh-my-zsh-git"
-								elif [ "$shrc" == "grml-zsh-config" ]; then
-									shell+=" grml-zsh-config zsh-completions"
-								fi
+								# if [ "$shrc" == "oh-my-zsh" ]; then
+								# 	if ! (grep "anarchy-local" </etc/pacman.conf &>/dev/null); then
+								# 		sed -i -e '$a\\n[anarchy-local]\nServer = file:///usr/share/anarchy/pkg\nSigLevel = Never' /etc/pacman.conf
+								# 	fi
+								# 	shell+=" oh-my-zsh-git"
+								# elif [ "$shrc" == "grml-zsh-config" ]; then
+								# 	shell+=" grml-zsh-config zsh-completions"
+								# fi
 				;;
 				*) sh="/bin/$shell"
 				;;
@@ -150,6 +163,7 @@ prepare_base() {
 				"grub"			"$loader_msg" \
 				"syslinux"		"$loader_msg1" \
 				"systemd-boot"	"$loader_msg2" \
+				"refind-efi"	    "rEFInd bootloader" \
 				"efistub"	    "$loader_msg3" \
 				"$none" "-" 3>&1 1>&2 2>&3)
 			ex="$?"
@@ -193,6 +207,9 @@ prepare_base() {
 		elif [ "$bootloader" == "grub" ]; then
 			base_install+="$bootloader "
 			break
+                elif [ "$bootloader" == "refind-efi" ]; then
+                        base_install+="$bootloader sbsigntools "
+                        break
 		else
 			if (dialog --defaultno --yes-button "$yes" --no-button "$no" --yesno "\n$grub_warn_msg0" 10 60) then
 				dialog --ok-button "$ok" --msgbox "\n$grub_warn_msg1" 10 60

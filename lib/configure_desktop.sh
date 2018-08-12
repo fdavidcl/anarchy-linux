@@ -390,6 +390,8 @@ config_env() {
     #cp "$aa_dir"/extra/anarchy-icon.png "$ARCH"/usr/share/pixmaps
     if "$david_dotfiles" ; then
         tar -xf "$aa_dir/extra/desktop/david/config.tar.gz" -C "$ARCH"/etc/skel
+        cp "$aa_dir/extra/desktop/david/xorg.conf.d/*" "$ARCH"/etc/X11/xorg.conf.d/
+        echo "FONT=ter-132n" > "$ARCH"/etc/vconsole.conf
     fi
     
 	mkdir "$ARCH"/usr/share/backgrounds/anarchy

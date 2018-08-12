@@ -15,6 +15,10 @@
 ### License: GPL v2.0
 ###############################################################
 
+refind_config() {
+    refind-install --root "$ARCH" --localkeys --yes
+}
+
 grub_config() {
 
 	if "$crypted" ; then

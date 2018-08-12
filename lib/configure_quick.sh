@@ -1,52 +1,38 @@
 #!/bin/bash
 
 quick_install() {
-
     latest_base="base-devel linux-headers zsh zsh-syntax-highlighting grub dialog wireless_tools wpa_supplicant wpa_actiond os-prober $base_defaults "
 
-    data_science="r python scala python-tensorflow-opt-cuda okular pandoc pandoc-citeproc simple-scan texlive-science texlive-bibtexextra texlive-formatsextra texlive-publishers texlive-pictures vi emacs git jupyter jupyter-notebook spyder3 openssh "
+    data_science_pk="r python scala python-tensorflow-opt-cuda okular pandoc pandoc-citeproc simple-scan texlive-science texlive-bibtexextra texlive-formatsextra texlive-publishers texlive-pictures vi emacs git jupyter jupyter-notebook spyder3 openssh "
 
-    unixporn="i3 i3status rofi neofetch fish feh redshift "
-    david_s="broadcom-wl-dkms ntfs-3g ttf-fira-code noto-fonts ruby krita arandr vlc telegram-desktop powertop pinta hledger hledger-web firefox docker docker-compose hplip clementine cheese $unixporn $data_science "
+    unixporn_pk="i3-gaps i3status rofi neofetch fish feh redshift adapta-gtk-theme ttf-roboto "
+    david_pk="refind-efi broadcom-wl-dkms ntfs-3g ttf-fira-code noto-fonts ruby krita arandr vlc telegram-desktop powertop pinta hledger hledger-web firefox docker docker-compose hplip clementine cheese"
 
     kernel="linux"
     sh="/bin/bash"
     shrc="$default"
-    bootloader="grub"
+    bootloader="refind-efi"
     net_util="networkmanager"
     enable_nm=true
     multilib=true
     dhcp=true
+    base_install="$latest_base"
     
-    case "$install_opt" in
-        Desktop-LTS|Server-LTS)
-            lts=true
-            ;;
-        *)
-            lts=false
-            ;;
-    esac
-    
-    case "$install_opt" in
-        Desktop|Desktop-LTS)
-            desktop=true
-            base_install="$latest_base"
-            ;;
-        Server|Server-LTS)
-            base_install="$latest_base"
-            ;;
-	Anarchy-Data-Science)
-	    desktop=true
-            enable_ssh=true
-	    base_install="$latest_base $data_science "
-	    ;;
-	David)
-	    desktop=true
-            david_dotfiles=true
-            enable_cups=true
-	    base_install="$latest_base $david_s "
-	    ;;
-    esac
+    if "$data_science" ; then
+        enable_ssh=true
+        base_install+="$data_science_pk "
+    fi
+
+    if "$unixporn" ; then
+        base_install+="$unixporn_pk "
+    fi
+
+    david_dotfiles=false
+    if "$david" ; then
+        david_dotfiles=true
+        enable_cups=true
+        base_install+="$david_pk "
+    fi
 
     if "$lts" ; then
         base_install+="linux-lts linux-lts-headers "
@@ -70,6 +56,38 @@ quick_install() {
         quick_desktop
         base_install+="$DE "
     fi
+
+    
+    
+    # case "$install_opt" in
+    #     Desktop-LTS|Server-LTS)
+    #         lts=true
+    #         ;;
+    #     *)
+    #         lts=false
+    #         ;;
+    # esac
+    
+    # case "$install_opt" in
+    #     Desktop|Desktop-LTS)
+    #         desktop=true
+    #         base_install="$latest_base"
+    #         ;;
+    #     Server|Server-LTS)
+    #         base_install="$latest_base"
+    #         ;;
+    #     Anarchy-Data-Science)
+    #         desktop=true
+    #         enable_ssh=true
+    #         base_install="$latest_base $data_science "
+    #         ;;
+    #     David)
+    #         desktop=true
+    #         david_dotfiles=true
+    #         enable_cups=true
+    #         base_install="$latest_base $david_s "
+    #         ;;
+    # esac
 }
 
 quick_desktop() {
